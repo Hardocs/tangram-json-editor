@@ -2,21 +2,27 @@
 import commonjs from '@rollup/plugin-commonjs'
 import json from '@rollup/plugin-json'
 import html from '@rollup/plugin-html'
+import css from 'rollup-plugin-css-only'
 import scss from 'rollup-plugin-scss'
 import image from '@rollup/plugin-image'
-// import smartAsset from 'rollup-plugin-smart-asset'
-import copy from "rollup-plugin-copy-assets"
+import smartAsset from 'rollup-plugin-smart-asset'
+// import copy from "rollup-plugin-copy-assets"
 import VuePlugin from 'rollup-plugin-vue2'
 import pkg from './package.json' // import our package.json file to re-use the naming
 
 const smartAssetOpts = {
   url: 'inline',
-  assetsPath: 'assets',
-  // outputDir: 'lib/assets',
+  // publicPath: 'src/components/icon-module',
+  // assetsPath: 'lib/assets',
   keepImport: true,
   // useHash: true,
   // keepName: true,
   // extensions: [".png"]
+}
+
+const vuePluginOpts = {
+  css: false,
+  // transformAssetUrls: true
 }
 
 export default {
@@ -33,12 +39,14 @@ export default {
   ],
   // this is an array of the plugins that we are including
   plugins: [
-    VuePlugin(),
-    copy({
-      assets: [
-        'src/assets',
-      ],
-    }),
+    css(),
+    VuePlugin(vuePluginOpts),
+    smartAsset(smartAssetOpts),
+    // copy({
+    //   assets: [
+    //     'src/components/icon-module',
+    //   ],
+    // }),
     json(),
     scss(),
     image(),
