@@ -1,23 +1,27 @@
 {
   "name": "@hardocs-project/tangram-json-editor",
-  "version": "0.8.7",
+  "version": "0.8.17",
   "description": "An npm package version in progress of a schema awareable JSON editor",
-  "main": "src/index.js",
+  "module": "lib/index.esm.js",
+  "files": [
+    "lib/",
+    "assets/"
+  ],
   "author": "Narration SD <narrationsd@gmail.com>,tangram-js <james_huang@tangramjs.com>",
   "scripts": {
-    "dev": "node build/dev-server.js",
+    "serve": "vue-cli-service serve",
     "start": "node build/dev-server.js",
     "build": "node build/build.js",
     "lint": "eslint --ext .js,.vue src",
-    "wprepare": "webpack --progress --config webpack.build.js",
-    "prepare": "babel src -d lib",
+    "prepare": "rollup -c rollup.config.js",
     "drypub": "npm publish --access public --dry-run",
     "vpub": "npm publish --registry http://localhost:4873",
     "ppub": "npm publish --access public",
     "apub": "npm publish --access public --tag alpha",
     "bpub": "npm publish --access public --tag beta",
     "rpub": "npm publish --access public --tag rc",
-    "npub": "npm publish --access public --tag next"},
+    "npub": "npm publish --access public --tag next"
+  },
   "dependencies": {
     "ace-builds": "^1.4.2",
     "ajv": "^5.5.2",
@@ -27,7 +31,8 @@
     "json-schema-empty": "^1.1.1",
     "json-schema-ref-parser": "^3.3.1",
     "material-icons": "^0.1.0",
-    "vue": "^2.5.22",
+    "core-js": "^3.6.5",
+    "vue": "^2.6.11",
     "vue-material": "^0.7.5",
     "vuejs-datepicker": "^0.9.29"
   },
@@ -36,6 +41,15 @@
     "@babel/core": "^7.12.10",
     "@babel/node": "^7.12.10",
     "@babel/preset-env": "^7.12.10",
+    "@rollup/plugin-babel": "^5.2.2",
+    "@rollup/plugin-commonjs": "^17.0.0",
+    "@rollup/plugin-html": "^0.2.0",
+    "@rollup/plugin-image": "^2.0.5",
+    "@rollup/plugin-json": "^4.1.0",
+    "@vue/cli-plugin-babel": "~4.5.0",
+    "@vue/cli-plugin-eslint": "~4.5.0",
+    "@vue/cli-service": "~4.5.0",
+    "@vue/compiler-sfc": "^3.0.4",
     "autoprefixer": "^7.2.6",
     "babel-core": "^6.26.3",
     "babel-eslint": "^7.1.1",
@@ -67,6 +81,11 @@
     "optimize-css-assets-webpack-plugin": "^2.0.0",
     "ora": "^1.4.0",
     "rimraf": "^2.6.3",
+    "rollup": "^2.34.2",
+    "rollup-plugin-copy-assets": "^2.0.3",
+    "rollup-plugin-scss": "^2.6.1",
+    "rollup-plugin-smart-asset": "^2.1.0",
+    "rollup-plugin-vue2": "^0.8.1",
     "semver": "^5.6.0",
     "shelljs": "^0.7.6",
     "url-loader": "^0.5.8",
@@ -87,6 +106,7 @@
   "browserslist": [
     "> 1%",
     "last 2 versions",
+    "not dead",
     "not ie <= 8"
   ]
 }

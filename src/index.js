@@ -10,6 +10,7 @@ const VERSION = PackageFile.version
 
 const install = (Vue) => {
   if (install.installed) return
+  install.installed = true
 
   // Vue.component('draggable', draggable)
   // Vue.component('App', App)
