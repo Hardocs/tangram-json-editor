@@ -231,6 +231,7 @@
   }
   .tree__node-icon {
     vertical-align: middle;
+    display: inline;
   }
   .tree__node__selected {
     background-color: lightskyblue;
