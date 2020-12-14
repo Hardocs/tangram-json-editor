@@ -33,11 +33,16 @@ function validateWithSchema (schema, newValue) {
   }
 }
 
+// there's no RegExp.escape in javascript
+function escapeRegex(string) {
+  return string.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
+}
+
 function resolveDupName (node, parent) {
   var origName = node.name
   var count = 0
   parent.children.forEach(child => {
-    let reg = new RegExp(`^${RegExp.escape(origName)}(\\(\\d+\\))?$`, 'g')
+    let reg = new RegExp(`^${escapeRegex(origName)}(\\(\\d+\\))?$`, 'g')
     if (reg.test(child.name)) count++
   })
   if (count > 0) {
