@@ -1,6 +1,6 @@
 {
   "name": "@hardocs-project/tangram-json-editor",
-  "version": "0.8.22",
+  "version": "0.8.23",
   "description": "An npm package version in progress of a schema awareable JSON editor",
   "module": "lib/index.esm.js",
   "files": [
@@ -33,7 +33,7 @@
     "json-schema-ref-parser": "^3.3.1",
     "material-icons": "^0.1.0",
     "vue": "^2.6.11",
-    "vue-material": "^0.7.5",
+    "vue-material": "^1.0.0-beta-7",
     "vuejs-datepicker": "^0.9.29"
   },
   "devDependencies": {

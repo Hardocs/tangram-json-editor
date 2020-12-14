@@ -8,18 +8,18 @@ import PackageFile from '../package.json'
 import VueMaterial from 'vue-material'
 import 'vue-material/dist/vue-material.css'
 import 'material-icons/css/material-icons.css'
-import Vue from "vue";
+import 'vue-material/dist/theme/black-green-dark.css'
 
 const VERSION = PackageFile.version
 
 const install = (Vue) => {
-  if (install.installed) return
-  install.installed = true
+  if (install.installed) {
+    return
+  } else {
+    install.installed = true
+  }
 
   Vue.use(VueMaterial)
-  Vue.material.registerTheme('default', {
-    primary: 'blue'
-  })
   Vue.config.productionTip = false
 
   // Vue.component('App', App)

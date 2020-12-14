@@ -54,6 +54,6 @@ export default {
     commonjs(),
   ],
   // ask rollup to not bundle Vue in the library
-  external: ['vue'],
-
+  // (except it's not there actually anyway, as we use it passed in from install)
+  // external: ['vue'],
 }
