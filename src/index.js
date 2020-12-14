@@ -8,7 +8,7 @@ import PackageFile from '../package.json'
 import VueMaterial from 'vue-material'
 import 'vue-material/dist/vue-material.css'
 import 'material-icons/css/material-icons.css'
-import 'vue-material/dist/theme/black-green-dark.css'
+// import 'vue-material/dist/theme/black-green-dark.css'
 
 const VERSION = PackageFile.version
 

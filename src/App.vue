@@ -44,5 +44,9 @@
   }
 </script>
 
-<style scoped>
+<style>
+/* correct for the early md-theme */
+.md-theme-default a:not(.md-button) {
+  color: #000000 !important;
+}
 </style>
