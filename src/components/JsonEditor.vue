@@ -122,7 +122,8 @@
   import ContextMenu from './ContextMenu.vue'
   import IconModule from './icon-module'
   import { menuData } from './json-editor'
-  import { cloneDeep } from 'lodash'
+  import { cloneDeepWith } from 'lodash'
+  import stringify from 'json-stringify-safe'
 
   function cloneTree (source) {
     let node = {}
@@ -138,6 +139,18 @@
       })
     }
     return node
+  }
+
+  // *todo* this will be the third copy of this - module export it
+  function generateId () {
+    return (new Date()).getTime() + ('000000000' + Math.floor((Math.random() * 10000) + 1)).substr(-4)
+  }
+
+  const idCustomizer = (value, key) => {
+    if (key === 'id') {
+      // console.log ('customizerId: ' + value)
+      return generateId()
+    }
   }
 
   var clipboard = {}
@@ -333,7 +346,13 @@
             return !source.node.parent
           },
           action (source) {
-            const freshNode = cloneDeep(source.node)
+            console.log('source.node: ' + stringify(source.node))
+            const freshNode = cloneDeepWith(source.node, idCustomizer) // use his copy vs. full clone
+            console.log('source.node: ' + stringify(source.node))
+            freshNode.id = generateId() // we didn't want to copy this
+            console.log('freshNode: ' + stringify(freshNode))
+            console.log('source.node.id: ' + source.node.id)
+            console.log('freshNode.id: ' + freshNode.id)
             source.node.parent.append(freshNode)
             // this.newJsonConfirmed(true)
           }

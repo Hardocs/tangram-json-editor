@@ -1,6 +1,6 @@
 {
   "name": "@hardocs-project/tangram-json-editor",
-  "version": "0.8.30",
+  "version": "0.8.31",
   "description": "An npm package version, in progress, of a schema awareable JSON editor",
   "module": "lib/index.esm.js",
   "files": [
@@ -28,9 +28,11 @@
     "brace": "^0.10.0",
     "clone": "^2.1.2",
     "core-js": "^3.8.1",
+    "flatted": "^3.1.0",
     "fs": "0.0.1-security",
     "json-schema-empty": "^1.1.1",
     "json-schema-ref-parser": "^3.3.1",
+    "json-stringify-safe": "^5.0.1",
     "material-icons": "^0.1.0",
     "vue": "^2.6.11",
     "vue-material": "^0.7.5",
