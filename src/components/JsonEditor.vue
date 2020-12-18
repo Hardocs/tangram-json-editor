@@ -317,11 +317,26 @@
             },
             selectItems: selections
           })
+          addons.splice(addons.length + 1, 0, { name: 'divider', type: 'divider-menu-item' })
         }
         // add divider menu items if addons exist
         if (addons.length > 0) {
           addons.splice(0, 0, { name: 'divider', type: 'divider-menu-item' })
         }
+        // add a duplicate action, disabled if not possible
+        addons.push({
+          name: 'duplicate',
+          type: null, // let's play this straight
+          label: 'Duplicate',
+          disabled (source) {
+            return !source.node.parent
+          },
+          action (source) {
+            source.node.parent.append(source.node)
+            this.newJsonConfirmed(true)
+          }
+        })
+
         this.$refs.context.show(e, source, addons)
       },
       undo () {

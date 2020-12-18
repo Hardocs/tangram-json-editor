@@ -124,7 +124,10 @@
         this.options.tree.startEditName(this.node)
       },
       startEditValue () {
-        this.$refs.editor.startEditValue()
+        // nsd - not functional in simpler editor, event kept in case otherwise useful
+        if (this.$refs.editor) {
+          this.$refs.editor.startEditValue()
+        }
       },
       contextMenu (e) {
         this.select()
