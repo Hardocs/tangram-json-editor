@@ -122,6 +122,7 @@
   import ContextMenu from './ContextMenu.vue'
   import IconModule from './icon-module'
   import { menuData } from './json-editor'
+  import { cloneDeep } from 'lodash'
 
   function cloneTree (source) {
     let node = {}
@@ -332,8 +333,9 @@
             return !source.node.parent
           },
           action (source) {
-            source.node.parent.append(source.node)
-            this.newJsonConfirmed(true)
+            const freshNode = cloneDeep(source.node)
+            source.node.parent.append(freshNode)
+            // this.newJsonConfirmed(true)
           }
         })
 
