@@ -123,7 +123,6 @@
   import IconModule from './icon-module'
   import { menuData } from './json-editor'
   import { cloneDeepWith } from 'lodash'
-  import stringify from 'json-stringify-safe'
 
   function cloneTree (source) {
     let node = {}
@@ -342,19 +341,20 @@
           name: 'duplicate',
           type: null, // let's play this straight
           label: 'Duplicate',
+          editor: this,
           disabled (source) {
             return !source.node.parent
           },
           action (source) {
-            console.log('source.node: ' + stringify(source.node))
+            // console.log('source.node: ' + stringify(source.node))
             const freshNode = cloneDeepWith(source.node, idCustomizer) // use his copy vs. full clone
-            console.log('source.node: ' + stringify(source.node))
+            // console.log('source.node: ' + stringify(source.node))
             freshNode.id = generateId() // we didn't want to copy this
-            console.log('freshNode: ' + stringify(freshNode))
+            // console.log('freshNode: ' + stringify(freshNode))
             console.log('source.node.id: ' + source.node.id)
             console.log('freshNode.id: ' + freshNode.id)
             source.node.parent.append(freshNode)
-            // this.newJsonConfirmed(true)
+            this.editor.updated()
           }
         })
 

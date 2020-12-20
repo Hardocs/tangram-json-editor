@@ -187,8 +187,11 @@ class JsonTreeNode {
   append (child) {
     if (this.type !== 'object' && this.type !== 'array') return 'Invalid operation.'
     // if child is not JsonTreeNode, then create JsonTreeNode
+    console.log('orig child name: ' + child.name)
+    if (child.name) resolveDupName(child, this)
+    console.log('resolved child name: ' + child.name)
     let newNode = (child.prototype && functionName(child.prototype) === 'JsonTreeNode') ? child : populateTree(child)
-    if (newNode.name) resolveDupName(newNode, this)
+    // if (newNode.name) resolveDupName(newNode, this)
     Vue.set(newNode, 'parent', this)
     this.children.push(newNode)
     Vue.set(this, 'expended', true)
@@ -228,6 +231,8 @@ class JsonTreeNode {
   }
 
   updateValue (newValue) {
+    console.log('store updateValue: ' + newValue +
+     ', this.id: ' + this.id)
     this.editingValue = false
     if (typeof newValue === 'undefined') return null
     if (this.type === 'object' || this.type === 'array') return null

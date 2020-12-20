@@ -76,6 +76,8 @@
         this.store.stopEditValue(node)
       },
       updateValue (node, value) {
+        console.log('JsonTree:updateValue:node:id' + node.id +
+          ', parent.id: ' + node.parent.id + ', value: ' + value)
         this.store.updateValue(node, value)
         this.$emit('update-value', node, value)
       },
