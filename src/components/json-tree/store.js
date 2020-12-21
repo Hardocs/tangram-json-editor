@@ -34,8 +34,8 @@ function validateWithSchema (schema, newValue) {
 }
 
 // there's no RegExp.escape in javascript
-function escapeRegex(string) {
-  return string.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
+function escapeRegex (string) {
+  return string.replace(/[-/\\^$*+?.()|[\]{}]/g, '\\$&')
 }
 
 function resolveDupName (node, parent) {
@@ -51,8 +51,8 @@ function resolveDupName (node, parent) {
 }
 
 function populateTree (node, parent) {
-  let root = new JsonTreeNode(node.type, node.name, node.value, node.schema, parent,
-    node.renamable, node.editable, node.draggable, node.droppable, node.expended, node.selected)
+  let root = new JsonTreeStoreNode(node.type, node.name, node.value, node.schema, parent,
+    node.renamable, node.editable, node.draggable, node.droppable, node.expanded, node.selected)
   if (root.selected) selectedNode = root
   if (node.children) {
     root.children = []
@@ -138,8 +138,9 @@ function generateDefault (schema) {
   return d
 }
 
-class JsonTreeNode {
-  constructor (type, name, value, schema, parent, renamable, editable, draggable, droppable, expended, selected) {
+// let's not confuse inner objects with Vue components...
+class JsonTreeStoreNode {
+  constructor (type, name, value, schema, parent, renamable, editable, draggable, droppable, expanded, selected) {
     this.id = generateId()
     this.type = type
     this.name = name
@@ -151,7 +152,7 @@ class JsonTreeNode {
     this.editable = typeof editable === 'undefined' ? true : editable
     this.draggable = typeof draggable === 'undefined' ? true : draggable
     this.droppable = typeof droppable === 'undefined' ? true : droppable
-    this.expended = expended
+    this.expanded = expanded
     this.selected = selected
     this.editingName = false
     this.editingValue = false
@@ -186,15 +187,15 @@ class JsonTreeNode {
 
   append (child) {
     if (this.type !== 'object' && this.type !== 'array') return 'Invalid operation.'
-    // if child is not JsonTreeNode, then create JsonTreeNode
+    // if child is not JsonTreeStoreNode, then create JsonTreeStoreNode
     console.log('orig child name: ' + child.name)
     if (child.name) resolveDupName(child, this)
     console.log('resolved child name: ' + child.name)
-    let newNode = (child.prototype && functionName(child.prototype) === 'JsonTreeNode') ? child : populateTree(child)
+    let newNode = (child.prototype && functionName(child.prototype) === 'JsonTreeStoreNode') ? child : populateTree(child)
     // if (newNode.name) resolveDupName(newNode, this)
     Vue.set(newNode, 'parent', this)
     this.children.push(newNode)
-    Vue.set(this, 'expended', true)
+    Vue.set(this, 'expanded', true)
     // add item of array or property of object
     if (this.type === 'array') {
       newNode.name = `[${this.children.length - 1}]`
@@ -232,7 +233,7 @@ class JsonTreeNode {
 
   updateValue (newValue) {
     console.log('store updateValue: ' + newValue +
-     ', this.id: ' + this.id)
+     ', this.name: ' + this.name)
     this.editingValue = false
     if (typeof newValue === 'undefined') return null
     if (this.type === 'object' || this.type === 'array') return null
@@ -246,6 +247,7 @@ class JsonTreeNode {
       }
     }
     // update value of node
+    console.log('store:updateValue:newValue: ' + newValue)
     this.value = newValue
   }
 
@@ -616,7 +618,7 @@ async function populateJsonTree (value, schema, name, renamable, parent) {
   if (type === 'undefined' || type === 'null' || type === 'function') return null
   let isSubtree = type === 'array' || type === 'object'
   if (typeof renamable === 'undefined') renamable = true
-  let expended = false
+  let expanded = false
   if (parent) {
     if (parent.schema && parent.schema.properties) {
       if (parent.schema.properties[name]) {
@@ -624,9 +626,9 @@ async function populateJsonTree (value, schema, name, renamable, parent) {
       }
     }
     if (parent.type === 'array') renamable = false
-  } else expended = true
+  } else expanded = true
   let editable = schema ? !schema.readonly : true
-  let jsonTree = new JsonTreeNode(
+  let jsonTree = new JsonTreeStoreNode(
     type,
     name,
     value,
@@ -636,7 +638,7 @@ async function populateJsonTree (value, schema, name, renamable, parent) {
     editable,
     true,
     true,
-    expended,
+    expanded,
     false
   )
   if (isSubtree && typeof value === 'object') {
@@ -724,7 +726,7 @@ class Store {
   }
 
   toggle (node) {
-    node.expended = !node.expended
+    node.expanded = !node.expanded
   }
 
   select (node) {
@@ -759,6 +761,7 @@ class Store {
   }
 
   updateValue (node, value) {
+    console.log('store:updateValue:typeof node: ' + typeof node)
     node.updateValue(value)
     this.alertMessage = validateWithSchema(this.schema, this.tree.value)
   }

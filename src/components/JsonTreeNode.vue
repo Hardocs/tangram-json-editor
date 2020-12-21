@@ -25,7 +25,7 @@
       <component ref="editor" v-if="showValue" :is="editor" :node="node" :options="options"></component>
     </span>
     <transition name="fade">
-      <ul class="tree__sub-tree" v-show="node.expended && node.children">
+      <ul class="tree__sub-tree" v-show="node.expanded && node.children">
         <json-tree-node
           v-for="child in node.children"
           :key="child.id"
@@ -79,8 +79,8 @@
       },
       toggleButton () {
         if (this.options.toggleButton) {
-          return this.options.toggleButton(this.node.expended)
-        } else return this.node.expended ? '&#9660;' : '&#9658;'
+          return this.options.toggleButton(this.node.expanded)
+        } else return this.node.expanded ? '&#9660;' : '&#9658;'
       },
       showValue () {
         return this.node.type !== 'array' && this.node.type !== 'object'
@@ -182,6 +182,8 @@
         }
       },
       updateValue () {
+        console.log('JsonTreeNode:updateValue:node.editable: ' + this.node.editable +
+          ', options.editable: ' + this.node.options.editable)
         if (this.node.editable && this.options.editable) {
           this.$refs.editor.value = this.node.value
           if (!this.node.editingValue) this.options.tree.startEditValue(this.node)

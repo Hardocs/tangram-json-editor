@@ -403,6 +403,7 @@
       // method for value updated in tree
       updated () {
         this.jsonContent = JSON.stringify(this.$refs.tree.root.value, null, 4)
+        console.log('JsonEditor:updated:rootvalue: ' + this.jsonContent)
         this.backupTreeData()
       },
       // method for menu item selected
@@ -471,7 +472,7 @@
       copyJsonToClipboard () {
         try {
           this.$refs.jsonContent.copyToClipboard()
-          throw('*todo* fake error to test snackbar')
+          throw new Error('*todo* fake error to test snackbar')
         } catch (err) {
           this.showSnackbar('Unable copy JSON document to clipboard, please press Ctrl/Cmd+C to copy.', 4000)
         }
