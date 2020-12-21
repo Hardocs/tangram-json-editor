@@ -5,6 +5,7 @@ import $RefParser from 'json-schema-ref-parser'
 import jsonDefaults from 'json-schema-empty'
 import defaultRepository from './repository'
 import schemaFunctions from './schemaFunctions'
+import stringify from 'json-stringify-safe'
 
 var selectedNode
 var repository
@@ -25,6 +26,7 @@ function validateWithSchema (schema, newValue) {
         let path = err.dataPath ? `${err.dataPath}: ` : ''
         message += `${path}${err.message}\r\n`
       })
+      console.log('validateWithSchema: ' + message)
       return message
     }
   } catch (err) {
@@ -246,8 +248,19 @@ class JsonTreeStoreNode {
         Vue.set(parent.value, this.name, newValue)
       }
     }
+    // nsd 21dec2020 but the preceding doesn't work, for inner content of nested items
+    // which have been constructed schema, then added. They don't have 'Vue.set'
+    // reactivity addition. As well, deep Vue nesting isn't encouraged. So we provide
+    // last a rebuild of the root 'value' element after the update, so that the json
+    // representation of the node tree will always be true.
+
     // update value of node
-    console.log('store:updateValue:newValue: ' + newValue)
+    console.log('store:updateValue:newValue: ' + newValue +
+      ', node.name: ' + this.name + ', node.id: ' + this.id +
+      ', node.parent.id: ' + this.parent.id +
+      ', node.parent.name: ' + this.parent.name +
+      ', node.parent.type: ' + this.parent.type +
+      ', node.parent.value[this.name]: ' + this.parent.value[this.name])
     this.value = newValue
   }
 
@@ -723,6 +736,53 @@ class Store {
       this.selectedNode = this.tree
     }
     this.alertMessage = validateWithSchema(this.schema, this.tree.value)
+  }
+
+  // nsd 21dec2020 This is our answer for a fundamental mistake in the
+  // basis forked editor. It was invisibly trying to depend upon Vue
+  // reactivity to propagate changed values up to the root. This worked
+  // for manually added items, but not at all for compound items appended
+  // on the basis of schemas, a basic purpose of this editor, as they
+  // weren't built inside Vue reactivity themselves.
+  //
+  // As well, it's not recommended to use elaborate nested objects in
+  // Vue reactivity, as these will cause performance problems. This
+  // solution is compact, and works without altering the basis code.
+  // Later we might want to improve that not to exercise Vue reactivity
+  // at all, which may be simple, but at the moment, delivery of
+  // features with attractiveness is the first concern.
+  //
+  // The following could be simpler yet, but separation of the
+  // recursive portion makes for clarity.
+
+  buildJsonTreeValue (node = null) {
+    if (!node) {
+      node = this.tree
+      // console.log('tree:original:value: ' + stringify(node.value))
+    }
+
+    if (node.type === 'array') {
+      const childVal = []
+      node.children.forEach(child => {
+        childVal.push(this.buildJsonTreeValue(child))
+      })
+      return childVal
+    } else if (node.type === 'object') {
+      let childVal = {}
+      node.children.forEach(child => {
+        // normal ES6 way to set dynamic object properties
+        childVal[child.name] = this.buildJsonTreeValue(child)
+      })
+      return childVal
+    } else {
+      return node.value
+    }
+  }
+
+  rebuildJsonRootTreeValue () {
+    const completeValue = this.buildJsonTreeValue()
+    console.log('completed:value: ' + stringify(completeValue))
+    this.tree.value = completeValue
   }
 
   toggle (node) {

@@ -182,6 +182,7 @@
         }
       },
       updateValue () {
+        // *todo* note that this never gets called. a bypassed idea, or from SchemaEditor version? investigate later
         console.log('JsonTreeNode:updateValue:node.editable: ' + this.node.editable +
           ', options.editable: ' + this.node.options.editable)
         if (this.node.editable && this.options.editable) {

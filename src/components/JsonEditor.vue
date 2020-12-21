@@ -402,6 +402,8 @@
       },
       // method for value updated in tree
       updated () {
+        // nsd 21dec2020 Now assure a true Json-producing value tree
+        this.$refs.tree.store.rebuildJsonRootTreeValue()
         this.jsonContent = JSON.stringify(this.$refs.tree.root.value, null, 4)
         console.log('JsonEditor:updated:rootvalue: ' + this.jsonContent)
         this.backupTreeData()

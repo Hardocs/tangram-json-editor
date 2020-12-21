@@ -121,6 +121,24 @@
     "total": {
       "type": "integer",
       "minimum": 1
+    },
+    "extra": {
+      "type": "object",
+      "minimum": 1,
+      "properties": {
+        "firstItem": {
+          "type": "string",
+          "default": "first string",
+          "minimum": 1
+        }
+      },
+      "required": [
+        "firstItem"
+      ]
+    },
+    "extra2": {
+      "type": "array",
+      "title": "exampArray"
     }
   },
   "required": [
@@ -129,6 +147,8 @@
     "customer",
     "orderItems",
     "shippingAddress",
-    "total"
+    "total",
+    "extra",
+    "extra2"
   ]
 }
