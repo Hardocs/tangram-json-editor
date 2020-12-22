@@ -90,7 +90,7 @@
       v-on:open="snackbar.visible=true"
       v-on:close="snackbar.visible=false"
     >
-      <span>{{snackbar.content}}</span>
+      <span class="snackbar-text">{{snackbar.content}}</span>
       <md-spinner v-if="snackbar.showSpinner" md-indeterminate :md-size="20"></md-spinner>
       <md-button primary @click.native="hideSnackbar">Close</md-button>
     </md-snackbar>
@@ -405,7 +405,7 @@
         // nsd 21dec2020 Now assure a true Json-producing value tree
         this.$refs.tree.store.rebuildJsonRootTreeValue()
         this.jsonContent = JSON.stringify(this.$refs.tree.root.value, null, 4)
-        console.log('JsonEditor:updated:rootvalue: ' + this.jsonContent)
+        // console.log('JsonEditor:updated:rootvalue: ' + this.jsonContent)
         this.backupTreeData()
       },
       // method for menu item selected
@@ -611,5 +611,9 @@
 
   .context-menu {
     font-size: 12px;
+  }
+
+  .snackbar-text {
+    color: lightgoldenrodyellow !important;
   }
 </style>

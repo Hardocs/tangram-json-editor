@@ -16,10 +16,14 @@ function generateId () {
 }
 
 function validateWithSchema (schema, newValue) {
+  console.log('validateWithSchema:' + stringify(schema) +
+    ', value: ' + stringify(newValue))
   if (!schema) return null
   let ajv = new Ajv({ allErrors: true })
   try {
     let valid = ajv.validate(schema, newValue)
+    console.log('validateWithSchema:valid:' + valid +
+      ', errors: ' + JSON.stringify(ajv.errors))
     if (!valid) {
       let message = ''
       ajv.errors.forEach(err => {
@@ -28,6 +32,8 @@ function validateWithSchema (schema, newValue) {
       })
       console.log('validateWithSchema: ' + message)
       return message
+    } else {
+      return null
     }
   } catch (err) {
     console.log(`validate failure: ${err.message}`)
@@ -739,8 +745,8 @@ class Store {
   }
 
   // nsd 21dec2020 This is our answer for a fundamental mistake in the
-  // basis forked editor. It was invisibly trying to depend upon Vue
-  // reactivity to propagate changed values up to the root. This worked
+  // basis forked tangram-json-editor. It was invisibly trying to depend upon
+  // Vue reactivity to propagate changed values up to the root. This worked
   // for manually added items, but not at all for compound items appended
   // on the basis of schemas, a basic purpose of this editor, as they
   // weren't built inside Vue reactivity themselves.
@@ -820,10 +826,32 @@ class Store {
     node.editingValue = false
   }
 
+  // a little recursion will help again, but a present doesn't
+  // answer an important question of the right level to validate.
+  // we're just doing the current item here, and there are other
+  // problems, likely tied to the question of nested values from
+  // multilayer schema objects added.
+  controllingSchemaNode (node) {
+    console.log('controllingSchemaNode:type: ' + node.schema.type +
+      ', title: ' + node.schema.title + ', items: ' + stringify(node.schema.items))
+    if ((node.schema.type !== 'array' && node.schema.title !== this.schema.title) ||
+      (node.schema.type === 'array' && node.schema.items.title !== this.schema.title)) {
+      return node
+    } else if (node === this.tree) {
+      return node
+    } else {
+      return this.controllingSchemaNode(node)
+    }
+  }
+
   updateValue (node, value) {
-    console.log('store:updateValue:typeof node: ' + typeof node)
     node.updateValue(value)
-    this.alertMessage = validateWithSchema(this.schema, this.tree.value)
+    // this.alertMessage = validateWithSchema(this.schema, this.tree.value)
+    const schemaNode = this.controllingSchemaNode(node)
+    this.alertMessage = schemaNode.name + ': ' + validateWithSchema(schemaNode.schema, schemaNode.value)
+    console.log('store:updateValue:typeof node: ' + typeof node +
+      ', schema: ' + schemaNode.schema.title +
+      ', validate: ' + validateWithSchema(schemaNode.schema, schemaNode.value))
   }
 
   append (node, child) {

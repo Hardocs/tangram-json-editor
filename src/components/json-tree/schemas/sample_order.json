@@ -8,7 +8,7 @@
         "customerNo": {
           "type": "string",
           "pattern": "^C[0-9]{4,}$",
-          "default": "C0001"
+          "default": "XC0001"
         },
         "firstName": {
           "type": "string"

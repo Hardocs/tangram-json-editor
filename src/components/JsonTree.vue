@@ -43,6 +43,7 @@
         this.store.setRepository(repository)
       },
       async setValue (value, schema, name, renamable) {
+        console.log('JsonTree:setValue:name: ' + name + ', schema: ' + schema.title)
         await this.store.setValue(value, schema, name, renamable)
       },
       setTree (tree) {
